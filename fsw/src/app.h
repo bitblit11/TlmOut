@@ -51,7 +51,6 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "osapi.h"
 #include "cmds.h"
-#include "frame.h"
 #include "msg.h"
 #include "tbl.h"
 
@@ -169,9 +168,7 @@ typedef struct
 
    /* Telemetry Framing Variables */
    uint16                	FillPktSeqCount;
-   TO_FillPacket_t       	FillPacket;
    uint32                	uiTotalVCDUOutputCount;
-   TO_FrameManagement_t  	Frame;
    uint32					ChildTaskMutex;
 } TO_AppData_T;
 
