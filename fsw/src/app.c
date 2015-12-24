@@ -1,37 +1,33 @@
-
 /*==============================================================================
-** File Name: to_app.c
-**
-** Title:  TO Radio Control Module Main .c File
-**
-** $Author: $
-** $Revision: $
-** $Date:  $
-**
-** Purpose:  To file contains all the functions for TO initialization and
-**           routines to send telemetry data using either a socket or serial
-**           port.
-**
-** Functions Contained:
-**    function name   -       Brief purpose of function
-**
-** Limitations, Assumptions, External Events, and Notes:
-**  1.   List assumptions that are made that apply to all functions in the
-**       file.
-**  2.   Provide the external source and events that can cause the
-**       functions in this file to execute.
-**  3.   List known limitations that apply to the functions in this file.
-**  4.   If there are no assumptions, external events, or notes then
-**       enter NONE.  Do not omit the section.
-**
-** Modification History:
-**   MM/DD/YY  SCR/SDR     Author          DESCRIPTION
-**   --------  ----------  -------------   -----------------------------
-**   mm/dd/yy  $$$SCRxxxx  C. Writer       Build #: Code Started
-**
-**
-**==============================================================================
+Copyright (c) 2015, Windhover Labs
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
+
+* Redistributions of source code must retain the above copyright notice, this
+  list of conditions and the following disclaimer.
+
+* Redistributions in binary form must reproduce the above copyright notice,
+  this list of conditions and the following disclaimer in the documentation
+  and/or other materials provided with the distribution.
+
+* Neither the name of TlmOut nor the names of its
+  contributors may be used to endorse or promote products derived from
+  this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -79,46 +75,7 @@ TO_AppData_T TO_AppData;
 void TO_SendToChannel(uint32 ChannelID, CFE_SB_MsgPtr_t Msg, uint32 Size);
 
 
-/*==============================================================================
-** Name:     TO_AppMain
-**
-** Purpose: Main entyr point and loop. Calls the init functions and then enters
-**          the main loop.
-**
-** Arguments:
-**     None
-**
-** Returns:
-**     None
-**
-** Assumptions, Limitations, External Events, and Notes:
-**  1.   None
-**
-** Routines Called:
-**     TO_AppInit - Initialization Function
-**     CFE_ES_RunLoop - Checks apps run status
-**     TO_RecvMsg - Pending read on schedule pipe
-**     CFE_ES_ExitApp - Completes app cleanup on exit
-**     sch_add_app
-**
-** Called By:
-**     None
-**
-** Algorithm:   psuedo-code or english descrption of basic algorithm
-**
-** Global Inputs/Reads:
-**     None
-**
-** Global Outputs/Writes:
-**     TO_AppData.uiRunStatus - TO app run status which controls main loop
-**
-** Programmer(s): Mathew Benson
-**
-** History:     Date Written  mm-dd-yyyy
-**              Unit Tested mm-dd-yyyy
-**
-**==============================================================================
-*/
+
 void TO_AppMain(void)
 {
 	int32     iStatus;
@@ -133,10 +90,6 @@ void TO_AppMain(void)
 		TO_AppData.RunStatus= CFE_ES_APP_ERROR;
 	}
 
-#ifdef TRICK_VER
-	sch_add_app( TO_WAKEUP_MID , TO_RecvMsg );
-#else
-
 	/* Application Main Loop */
 	while(CFE_ES_RunLoop(&TO_AppData.RunStatus) == TRUE)
 	{
@@ -146,46 +99,10 @@ void TO_AppMain(void)
 
 	/*  Exit the Application */
 	CFE_ES_ExitApp(TO_AppData.RunStatus);
-#endif
 }
 
-/*==============================================================================
-** Name: TO_RecvMsg()
-**
-** Purpose: To receive messages from the schedule pipe, and then call the
-**          process message command.
-**
-** Arguments:
-**    int iBlocking - variable to indicate blocking or polling read
-**
-** Returns:
-**     int iStatus - Status of receive message
-**
-** Assumptions, Limitations, External Events, and Notes:
-**  1.   None
-**
-** Routines Called:
-**     CFE_SB_RcvMsg
-**     TO_ProcessSchMsg
-**
-** Called By:
-**     TO_AppMain
-**
-** Algorithm:   psuedo-code or english descrption of basic algorithm
-**
-** Global Inputs/Reads:
-**     TO_AppData.SchPipe - Schedule Pipe Identifier
-**
-** Global Outputs/Writes:
-**     TO_AppData.MsgPtr - Pointer to store recvd message
-**
-** Programmer(s): Mathew Benson
-**
-** History:     Date Written  mm-dd-yyyy
-**              Unit Tested mm-dd-yyyy
-**
-**==============================================================================
-*/
+
+
 int32 TO_RecvMsg( int32 timeout )
 {
 	int32 iStatus ;
@@ -223,44 +140,8 @@ int32 TO_RecvMsg( int32 timeout )
 
 }
 
-/*==============================================================================
-** Name: TO_delete_callback
-**
-** Purpose: This function will be called in the event that the TO app is
-**          killed.
-**
-** Arguments:
-**     None
-**
-** Returns:
-**     None
-**
-** Assumptions, Limitations, External Events, and Notes:
-**  1.   None
-**
-** Routines Called:
-**      OS_printf
-**
-** Called By:
-**     CFS
-**
-** Algorithm:   psuedo-code or english descrption of basic algorithm
-**
-** Global Inputs/Reads:
-**     TO_AppData.iSockFd - Combined Telem Socket File Descriptor
-**     TO_AppData.iFastSockFd - Fast Telem Socket File Descriptor
-**     TO_AppData.downlink_on - Downlink status variable
-**
-** Global Outputs/Writes:
-**     None
-**
-** Programmer(s): Mathew Benson
-**
-** History:     Date Written  mm-dd-yyyy
-**              Unit Tested mm-dd-yyyy
-**
-**==============================================================================
-*/
+
+
 void TO_Cleanup(void)
 {
 	uint32 i=0;
@@ -279,72 +160,7 @@ void TO_Cleanup(void)
 }
 
 
-/*==============================================================================
-** Name: TO_AppInit
-**
-** Purpose: To initialize all message pipes and variables required for TO.
-**
-** Arguments:
-**     None
-**
-** Returns:
-**     int iStatus - Status of initialization, currently always CFE_SUCCESS
-**
-** Assumptions, Limitations, External Events, and Notes:
-**  1.   None
-**
-** Routines Called:
-**     fInitCRCTable - Creates the CRC lookup table
-**     CFE_ES_RegisterApp - Registers application with CFS
-**     CFE_EVS_Register - Registers events
-**     CFE_ES_WriteToSysLog - Writes to system log and console
-**     CFE_SB_InitMsg - Initializes software bus message
-**     CFE_SB_CreatePipe - Creates software bus pipe
-**     CFE_SB_Subscribe - Subscribes a msg id for a specific pipe
-**     CFE_SB_SubscribeEx -
-**     CFE_EVS_SendEvent - Sends event to EVS
-**     TO_TableInit - Initialize and Load the iLoad Table
-**     TO_InitializeFrames - Initializes Telemetry Frames
-**
-** Called By:
-**     TO_AppMain
-**
-** Algorithm:   psuedo-code or english descrption of basic algorithm
-**
-** Global Inputs/Reads:
-**     TO_SubTable[] - Tlm Subscription Table
-**     TO_FastSubTable[] - Fast Tlm Subscription Table
-**
-** Global Outputs/Writes:
-**     TO_AppData.uiRunStatus - Main app run status
-**     TO_AppData.sPipeDepth - Command Pipe Depth
-**     TO_AppData.cPipeName - Command Pipe Name
-**     TO_AppData.sTlmPipeDepth - Tlm Pipe Depth
-**     TO_AppData.cTlmPipeName - Tlm Pipe Name
-**     TO_AppData.sFastTlmPipeDepth - Fast Tlm Pipe Depth
-**     TO_AppData.cFastTlmPipeName - Fast Tlm Pipe Name
-**     TO_AppData.sSchPipeDepth - Sch Pipe depth
-**     TO_AppData.cSchPipeName - Sch Pipe Name
-**     TO_AppData.EventFilters[].EventID - Event ID array
-**     TO_AppData.EventFilters[].Mask - Event Mask
-**     TO_AppData.HkPacket - TO Housekeeping Packet
-**     TO_AppData.CmdPipe - Command Pipe Identifier
-**     TO_AppData.TlmPipe - Tlm Pipe Identifier
-**     TO_AppData.SchPipe - Schedule Pipe Identifier
-**     TO_AppData.FastTlmPipe - FastTlm Pipe Identifier
-**     TO_AppData.downlink_on - Downlink status variable (socket)
-**     TO_AppData.Frame.LatestCLCW - Command Status Word
-**     TO_AppData.iSerialFd - Serial File Descriptor
-**     TO_AppData.Frame.OutputRealTimeVCDU - Flag to indicate VCDU output
-**     TO_AppData.ucDmaTxBuff - DMA Buffer For Target Serial Card
-**
-** Programmer(s): Mathew Benson
-**
-** History:     Date Written  mm-dd-yyyy
-**              Unit Tested mm-dd-yyyy
-**
-**==============================================================================
-*/
+
 int32 TO_AppInit(void)
 {
     int32            iStatus;
@@ -536,45 +352,6 @@ end_of_function:
 
 
 
-/*==============================================================================
-** Name: TO_ProcessSchMsg
-**
-** Purpose: To process the received scheduler message and call the appropriate
-**          functions.
-**
-** Arguments:
-**     None
-**
-** Returns:
-**     None
-**
-** Assumptions, Limitations, External Events, and Notes:
-**  1.   None
-**
-** Routines Called:
-**     CFE_SB_GetMsgId
-**     TO_ForwardTelemetry
-**     TO_ProcessCmdMsg
-**     TO_OutputStatus
-**
-** Called By:
-**     TO_RecvMsg
-**
-** Algorithm:   psuedo-code or english descrption of basic algorithm
-**
-** Global Inputs/Reads:
-**     TO_AppData.MsgPtr - Pointer to incoming message
-**
-** Global Outputs/Writes:
-**     None
-**
-** Programmer(s): Mathew Benson
-**
-** History:     Date Written  mm-dd-yyyy
-**              Unit Tested mm-dd-yyyy
-**
-**==============================================================================
-*/
 void TO_ProcessSchMsg(void)
 {
 	CFE_SB_MsgId_t  MsgId;
@@ -608,44 +385,6 @@ void TO_ProcessSchMsg(void)
 
 
 
-/*==============================================================================
-** Name: TO_ProcessCmdMsg
-**
-** Purpose: To process the incoming command message and call the appropriate
-**          functions.
-**
-** Arguments:
-**     None
-**
-** Returns:
-**     None
-**
-** Assumptions, Limitations, External Events, and Notes:
-**  1.   None
-**
-** Routines Called:
-**     CFE_SB_RcvMsg
-**     CFE_SB_GetMsgId
-**     TO_CmdExec
-**
-** Called By:
-**     TO_ProcessSchMsg
-**
-** Algorithm:   psuedo-code or english descrption of basic algorithm
-**
-** Global Inputs/Reads:
-**     TO_AppData.CmdPipe - Command Pipe Identifier
-**
-** Global Outputs/Writes:
-**     None
-**
-** Programmer(s): Mathew Benson
-**
-** History:     Date Written  mm-dd-yyyy
-**              Unit Tested mm-dd-yyyy
-**
-**==============================================================================
-*/
 void TO_ProcessCmdMsg(void)
 {
     CFE_SB_Msg_t    *MsgPtr;
@@ -683,48 +422,6 @@ void TO_ProcessCmdMsg(void)
 
 
 
-/*==============================================================================
-** Name:  TO_OutputStatus
-**
-** Purpose: To gather data and output the housekeeping packet.
-**
-** Arguments:
-**     None
-**
-** Returns:
-**     None
-**
-** Assumptions, Limitations, External Events, and Notes:
-**  1.   None
-**
-** Routines Called:
-**     CFE_SB_TimeStampMsg
-**     CFE_SB_SendMsg
-**
-** Called By:
-**     TO_ProcessSchMsg
-**     TO_CmdExec
-**
-** Algorithm:   psuedo-code or english descrption of basic algorithm
-**
-** Global Inputs/Reads:
-**     None
-**
-** Global Outputs/Writes:
-**     TO_AppData.HkPacket - Housekeeping packet header initialized
-**     TO_AppData.HkPacket.uiLatestCLCW - Current CLCW Value
-**     TO_AppData.HkPacket.uiTotalVCDUOutputCount - Total VCDU TX Count
-**     TO_AppData.HkPacket.ucActiveVirtualChannel - Active Virtual Channel
-**     TO_AppData.HkPacket.usSpacecraftID - Spacecraft ID
-**     TO_AppData.HkPacket.ucOutputRealTimeVCDU - Flag Status
-**
-** Programmer(s): Mathew Benson
-**
-** History:     Date Written  mm-dd-yyyy
-**              Unit Tested mm-dd-yyyy
-**
-**==============================================================================
-*/
 void TO_OutputStatus(void)
 {
 	/* Timestamp Message */
@@ -735,48 +432,6 @@ void TO_OutputStatus(void)
 
 
 
-/*==============================================================================
-** Name: TO_ForwardTelemetry
-**
-** Purpose:  Calls the appropriate functions to build and output framed
-**           telemetry packets.
-**
-** Arguments:
-**     None
-**
-** Returns:
-**     None
-**
-** Assumptions, Limitations, External Events, and Notes:
-**  1.   None
-**
-** Routines Called:
-**     TO_BuildRealTimeFrame
-**     TO_OutputFrame
-**     TO_InitializeRealTimeFrame
-**
-**
-** Called By:
-**     TO_ProcessSchMsg
-**
-** Algorithm:   psuedo-code or english descrption of basic algorithm
-**
-** Global Inputs/Reads:
-**     TO_AppData.suppress_sendto
-**     TO_AppData.suppress_serial_sendto
-**     TO_AppData.Frame.OutputRealTimeVCDU
-**
-** Global Outputs/Writes:
-**     TO_AppData.Frame.FrameBuffer
-**     TO_AppData.uiTotalVCDUOutputCount
-**
-** Programmer(s): Mathew Benson
-**
-** History:     Date Written  mm-dd-yyyy
-**              Unit Tested mm-dd-yyyy
-**
-**==============================================================================
-*/
 void TO_ForwardTelemetry(uint32 PrioMask)
 {
     int32   cfeStatus;
@@ -830,45 +485,6 @@ void TO_ForwardTelemetry(uint32 PrioMask)
 
 
 
-/*==============================================================================
-** Name: TO_TableInit
-**
-** Purpose: To initialize the TO configuration table.
-**
-** Arguments: None
-**
-** Returns:
-**     int32 iStatus - Status to indicate success or failure
-**
-** Routines Called:
-**     CFE_TBL_Register
-**     CFE_TBL_Load
-**     CFE_TBL_Manage
-**     CFE_TBL_GetAddress
-**     CI_ProcessNewiLoadTable
-**     CFE_EVS_SendEvent
-**
-** Called By:
-**     TO_AppInit
-**
-** Global Inputs/Reads:
-**     None
-**
-** Global Outputs/Writes:
-**     TO_AppData.iLoadTableHandle
-**     TO_AppData.iLoadTablePtr
-**
-** Limitations, Assumptions, External Events, and Notes:
-**
-** Algorithm:
-**
-** Programmer(s): Mathew Benson
-**
-** History:     mm-dd-yyyy  Programmer  Event
-**              mm-dd-yyyy              Date Written
-**              mm-dd-yyyy              Unit Test Complete
-**==============================================================================
-*/
 int32 TO_TableInit (void)
 {
 	int32 iStatus = CFE_SUCCESS;
@@ -984,7 +600,6 @@ void TO_SendToChannel(uint32 ChannelID, CFE_SB_MsgPtr_t Msg, uint32 Size)
 
 
 
-/* ---------- end of file to_app.c ----------*/
 #ifdef __cplusplus
 }
 #endif

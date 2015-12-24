@@ -1,30 +1,33 @@
-
 /*==============================================================================
-** File Name: to_crc.c
-**
-** Title:    TO CRC Functions
-**
-** $Author: $
-** $Revision: $
-** $Date:  $
-**
-** Purpose:   To provide function for use with the CRC.
-**
-** Functions Contained:
-**    fInitCRCTable - Creates the CRC Lookup Table
-**    fCalcCRC - Calculates a CRC value
-**
-** Limitations, Assumptions, External Events, and Notes:
-**  1.  None
-**
-** Modification History:
-**   MM/DD/YY  SCR/SDR     Author          DESCRIPTION
-**   --------  ----------  -------------   -----------------------------
-**   mm/dd/yy  $$$SCRxxxx  C. Writer       Build #: Code Started
-**
-**
-**==============================================================================
+Copyright (c) 2015, Windhover Labs
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
+
+* Redistributions of source code must retain the above copyright notice, this
+  list of conditions and the following disclaimer.
+
+* Redistributions in binary form must reproduce the above copyright notice,
+  this list of conditions and the following disclaimer in the documentation
+  and/or other materials provided with the distribution.
+
+* Neither the name of TlmOut nor the names of its
+  contributors may be used to endorse or promote products derived from
+  this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -68,44 +71,7 @@ unsigned short  usCRCTable[256]; /* contains pre-calcuated remainders */
 */
 
 
-/*==============================================================================
-** Name: to_crc.c
-**
-** Purpose: CRC Lookup table for efficient CRC calculations, the table
-**			contains the remainder of each possible dividend.
-**
-** Arguments:
-**     None
-**
-** Returns:
-**     None
-**
-** Assumptions, Limitations, External Events, and Notes:
-**  1.   The CRC_POLYNOMIAL variable must be defined for the CRC.
-**
-**
-** Routines Called:
-**     None
-**
-**
-** Called By:
-**     None
-**
-** Algorithm:   psuedo-code or english descrption of basic algorithm
-**
-** Global Inputs/Reads:
-**     None
-**
-** Global Outputs/Writes:
-**     usCRCTable - Table to contain the values
-**
-** Programmer(s): Brian Butcher
-**
-** History:     Date Written  mm-dd-yyyy
-**              Unit Tested mm-dd-yyyy
-**
-**==============================================================================
-*/
+
 void fInitCRCTable(void)
 {
 
@@ -142,43 +108,8 @@ void fInitCRCTable(void)
 	}
 }
 
-/*==============================================================================
-** Name:   fCalcCRC
-**
-** Purpose: Calculate the CRC16 CCITT value for the message.
-**
-** Arguments:
-**      unsigned char* ucData - Pointer to a data block
-**      int iOffset - Offset into message to begin calc
-**      int iSize - Size of data block
-**
-** Returns:
-**     unsigned short usCRC - CRC Value
-**
-** Assumptions, Limitations, External Events, and Notes:
-**  1.   None
-**
-** Routines Called:
-**     None
-**
-** Called By:
-**     None
-**
-** Algorithm:   psuedo-code or english descrption of basic algorithm
-**
-** Global Inputs/Reads:
-**     None
-**
-** Global Outputs/Writes:
-**     None
-**
-** Programmer(s): Brian Butcher
-**
-** History:     Date Written  mm-dd-yyyy
-**              Unit Tested mm-dd-yyyy
-**
-**==============================================================================
-*/
+
+
 unsigned short fCalcCRC(  unsigned char* ucData, int iOffset, int iSize )
 {
 	unsigned short usCRC = INITIAL_CRC;

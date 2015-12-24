@@ -1,37 +1,33 @@
-
 /*==============================================================================
-** File Name: to_app.c
-**
-** Title:  TO Telemetry Output Main .c File
-**
-** $Author: $
-** $Revision: $
-** $Date:  $
-**
-** Purpose:  To file contains all the functions for TO initialization and
-**           routines to send telemetry data using either a socket or serial
-**           port.
-**
-** Functions Contained:
-**    function name   -       Brief purpose of function
-**
-** Limitations, Assumptions, External Events, and Notes:
-**  1.   List assumptions that are made that apply to all functions in the
-**       file.
-**  2.   Provide the external source and events that can cause the
-**       functions in this file to execute.
-**  3.   List known limitations that apply to the functions in this file.
-**  4.   If there are no assumptions, external events, or notes then
-**       enter NONE.  Do not omit the section.
-**
-** Modification History:
-**   MM/DD/YY  SCR/SDR     Author          DESCRIPTION
-**   --------  ----------  -------------   -----------------------------
-**   mm/dd/yy  $$$SCRxxxx  C. Writer       Build #: Code Started
-**
-**
-**==============================================================================
+Copyright (c) 2015, Windhover Labs
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
+
+* Redistributions of source code must retain the above copyright notice, this
+  list of conditions and the following disclaimer.
+
+* Redistributions in binary form must reproduce the above copyright notice,
+  this list of conditions and the following disclaimer in the documentation
+  and/or other materials provided with the distribution.
+
+* Neither the name of TlmOut nor the names of its
+  contributors may be used to endorse or promote products derived from
+  this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -82,53 +78,6 @@ extern TO_AppData_T TO_AppData;
 
 
 
-/*==============================================================================
-** Name: TO_CmdExec
-**
-** Purpose: To determine the command code within the incoming command message
-**          and call the correct function or set the corresponding variables.
-**
-** Arguments:
-**     CFE_SB_MsgPtr_t cmd - Pointer to command message
-**
-** Returns:
-**     None
-**
-** Assumptions, Limitations, External Events, and Notes:
-**  1.   None
-**
-** Routines Called:
-**     CFE_SB_GetCmdCode
-**     CFE_EVS_SendEvent
-**     TO_ResetStatus
-**     TO_OutputDataTypesPkt
-**     TO_AddPkt
-**     TO_RemovePkt
-**     TO_RemoveAllPkt
-**     TO_StartSending
-**     TO_SetTlmSerialFD
-**
-** Called By:
-**     TO_ProcessCmdMsg
-**
-** Algorithm:   psuedo-code or english descrption of basic algorithm
-**
-** Global Inputs/Reads:
-**     None
-**
-** Global Outputs/Writes:
-**     TO_AppData.Frame.OutputRealTimeVCDU - Flag to output VCDU frames
-**     TO_AppData.serial_downlink_on - Flag to indicate serial downlink on
-**     TO_AppData.HkPacket.ucTOCmdCount - Command Counter
-**     TO_AppData.HkPacket.ucTOCmdErrCount - Command error counter
-**
-** Programmer(s): Brian Butcher
-**
-** History:     Date Written  mm-dd-yyyy
-**              Unit Tested mm-dd-yyyy
-**
-**==============================================================================
-*/
 void TO_CmdExec(CFE_SB_MsgPtr_t msg)
 {
     uint16 CommandCode;
@@ -190,42 +139,6 @@ void TO_CmdExec(CFE_SB_MsgPtr_t msg)
 
 
 
-/*==============================================================================
-** Name:  TO_ResetStatus
-**
-** Purpose: To reset HK status variables.
-**
-** Arguments:
-**     None
-**
-** Returns:
-**     None
-**
-** Assumptions, Limitations, External Events, and Notes:
-**  1.   None
-**
-** Routines Called:
-**     None
-**
-** Called By:
-**     TO_CmdExec
-**
-** Algorithm:   psuedo-code or english descrption of basic algorithm
-**
-** Global Inputs/Reads:
-**     None
-**
-** Global Outputs/Writes:
-**     TO_AppData.HkPacket.ucTOCmdErrCount = 0;
-**	   TO_AppData.HkPacket.ucTOCmdCount = 0;
-**
-** Programmer(s): Brian Butcher
-**
-** History:     Date Written  mm-dd-yyyy
-**              Unit Tested mm-dd-yyyy
-**
-**==============================================================================
-*/
 void TO_ResetStatus(void)
 {
 	TO_AppData.HkPacket.CmdCount = -1;
@@ -243,42 +156,6 @@ void TO_ResetStatus(void)
 
 
 
-/*==============================================================================
-** Name:  TO_OutputDataTypesPkt
-**
-** Purpose:  To output the data types telem packet. This is legacy CFS code and
-**           was preserved in case we need it in the future for testing.
-**
-** Arguments:
-**     None
-**
-** Returns:
-**     None
-**
-** Assumptions, Limitations, External Events, and Notes:
-**  1.   None
-**
-** Routines Called:
-**
-**
-** Called By:
-**     TO_CmdExec
-**
-** Algorithm:   psuedo-code or english descrption of basic algorithm
-**
-** Global Inputs/Reads:
-**     None
-**
-** Global Outputs/Writes:
-**     TO_AppData.DataTypesPacket
-**
-** Programmer(s):LRO Re-use
-**
-** History:     Date Written  mm-dd-yyyy
-**              Unit Tested mm-dd-yyyy
-**
-**==============================================================================
-*/
 void TO_OutputDataTypesPkt(void)
 {
     uint16 i = 0;
@@ -326,42 +203,6 @@ void TO_OutputDataTypesPkt(void)
 
 
 
-/*==============================================================================
-** Name:  TO_AddPkt
-**
-** Purpose: To subscribe for a parameterized packet id on the TLM PIPE. This
-**          gives the flexibility of added packets to download in flight.
-**
-** Arguments:
-**     TO_ADD_PKT_t * pCmd - Pointer to command message
-**
-** Returns:
-**     None
-**
-** Assumptions, Limitations, External Events, and Notes:
-**  1.   None
-**
-** Routines Called:
-**
-**
-** Called By:
-**     TO_CmdExec
-**
-** Algorithm:   psuedo-code or english descrption of basic algorithm
-**
-** Global Inputs/Reads:
-**     TO_AppData.TlmPipe - Telemetry Pipe Identifier
-**
-** Global Outputs/Writes:
-**     None
-**
-** Programmer(s): Brian Butcher
-**
-** History:     Date Written  mm-dd-yyyy
-**              Unit Tested mm-dd-yyyy
-**
-**==============================================================================
-*/
 void TO_AddPkt( TO_ADD_PKT_t * cmd)
 {
 	int32  iStatus = CFE_SUCCESS;
@@ -449,42 +290,6 @@ void TO_AddPkt( TO_ADD_PKT_t * cmd)
 
 
 
-/*=============================================================================
-** Name:  TO_RemovePkt
-**
-** Purpose: To remove a specific packet from the TLM Pipe subscriptions.
-**
-** Arguments:
-**     TO_ADD_PKT_t * pCmd - Pointer to command message
-**
-** Returns:
-**     None
-**
-** Assumptions, Limitations, External Events, and Notes:
-**  1.   None
-**
-** Routines Called:
-**     CFE_SB_Unsubscribe
-**     CFE_EVS_SendEvent
-**
-** Called By:
-**     TO_CmdExec
-**
-** Algorithm:   psuedo-code or english descrption of basic algorithm
-**
-** Global Inputs/Reads:
-**     TO_AppData.TlmPipe - Tlm pipe Identifier
-**
-** Global Outputs/Writes:
-**     None
-**
-** Programmer(s): Brian Butcher
-**
-** History:     Date Written  mm-dd-yyyy
-**              Unit Tested mm-dd-yyyy
-**
-**==============================================================================
-*/
 void TO_RemovePkt(TO_REMOVE_PKT_t * pCmd)
 {
 	int32  iStatus = CFE_SUCCESS;
@@ -529,47 +334,6 @@ void TO_RemovePkt(TO_REMOVE_PKT_t * pCmd)
 
 
 
-/*==============================================================================
-** Name: TO_RemoveAllPkt
-**
-** Purpose: To remove all message subscriptions from the TLM Pipe.
-**
-** Arguments:
-**     None
-**
-** Returns:
-**     None
-**
-** Assumptions, Limitations, External Events, and Notes:
-**  1.   Note: This will only remove the message id'd in the subscription
-**             table, so if additional have been added via the AddPkt command
-**             then they will remain. This could be bad and I may look into
-**             removing it or at least the remove command aspect.
-**
-** Routines Called:
-**     CFE_SB_Unsubscribe
-**     CFE_EVS_SendEvent
-**
-** Called By:
-**     None
-**
-** Algorithm:   psuedo-code or english descrption of basic algorithm
-**
-** Global Inputs/Reads:
-**     TO_SubTable[].MessageId
-**     TO_AppData.TlmPipe
-**     TO_AppData.CmdPipe
-**
-** Global Outputs/Writes:
-**     None
-**
-** Programmer(s): Brian Butcher
-**
-** History:     Date Written  mm-dd-yyyy
-**              Unit Tested mm-dd-yyyy
-**
-**==============================================================================
-*/
 void TO_RemoveAllPkt(void)
 {
 	int32  iStatus = CFE_SUCCESS;
@@ -607,45 +371,7 @@ void TO_RemoveAllPkt(void)
 }
 
 
-/*==============================================================================
-** Name: TO_StartSending
-**
-** Purpose: To setup the ethernet sockets using the IP address from the
-**          incoming command that triggered the function execution.
-**
-** Arguments:
-**     TO_OUTPUT_ENABLE_PKT_t - Enable socket tlm command msg struct
-**
-** Returns:
-**     None
-**
-** Assumptions, Limitations, External Events, and Notes:
-**  1.   None
-**
-** Routines Called:
-**     TO_OpenSockTlm
-**
-** Called By:
-**     TO_CmdExec
-**
-** Algorithm:   psuedo-code or english descrption of basic algorithm
-**
-** Global Inputs/Reads:
-**     TO_AppData.downlink_on - Flag to indicate if socket already setup
-**
-** Global Outputs/Writes:
-**     TO_AppData.cTlmDestIP - Destination IP Address
-**     TO_AppData.suppress_sendto - Flag to suppress telemetry
-**     TO_AppData.downlink_on - Flag to indicate if sockets opened
-**     TO_AppData.Frame.OutputRealTimeVCDU - Flag to begin sending VCDU frames
-**
-** Programmer(s): Brian Butcher
-**
-** History:     Date Written  mm-dd-yyyy
-**              Unit Tested mm-dd-yyyy
-**
-**==============================================================================
-*/
+
 void TO_EnableDownlink( TO_OUTPUT_ENABLE_PKT_t * cmd )
 {
 	uint32 i=0;
